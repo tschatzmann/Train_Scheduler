@@ -31,10 +31,7 @@ $(document).ready(function(){
         event.preventDefault();
 
         // Get the input values
-        trainName = $("#trainNameInput").val().trim();
-        destination = $("#destinationInput").val().trim();
-        frequency = $("#frequencyInput").val().trim();
-        firstTime =  moment($("#firstTimeInput").val().trim(), "HH:mm").format("X");
+        ({ trainName, destination, frequency, firstTime } = GetTrainValues(trainName, destination, frequency, firstTime));
 
 
         if(trainName != "" && destination != "" && firstTime != "" && frequency != "")
@@ -49,10 +46,7 @@ $(document).ready(function(){
             });
 
             // clear the input boxes
-            $("#trainNameInput").val("");
-            $("#destinationInput").val("");
-            $("#frequencyInput").val("");
-            $("#firstTimeInput").val("");
+            cleanInputFields();
         }
         else
         {
@@ -114,19 +108,45 @@ $(document).ready(function(){
 
     // deleteTrain function will delete the train clicked on from
     // the database.
-    function deleteTrain(fbaseKey){
-        database.ref().child(fbaseKey).remove();
-    };
+    function deleteTrain(dateAddedValue){
+        // Find all train-schedule whose height is exactly 25 meters.
+var ref = firebase.database().ref("train-schedule-8bf86");
+ref.orderByChild("dateAdded").equalTo(dateAddedValue).on("child_added", function(snapshot) {
+  console.log(snapshot.key);
+        database.ref().child(dateAdded).remove();
+        console.log('trainremoved ' + dateAdded)
+    })
+};
+
 
     // this is triggered when the delete button is clicked
     $(document).on("click", '.deleteButton', function(event){
-        //alert('delete Button Clicked');
-        //console.log($(this).attr('data-key'));
+        console.log('at delete')
+        console.log($(this).attr('data-key'));
+});
 
         // remove this table row
         $(this).closest('tr').remove();
         // go delete from database
-        deleteTrain($(this).attr('data-key'));
-    });
+        var dateAddedValue = $(this).attr('data-key')
+        deleteTrain(dateAddedValue);
+
 
 }); // end doument ready
+
+function GetTrainValues(trainName, destination, frequency, firstTime) {
+    trainName = $("#trainNameInput").val().trim();
+    destination = $("#destinationInput").val().trim();
+    frequency = $("#frequencyInput").val().trim();
+    firstTime = moment($("#firstTimeInput").val().trim(), "HH:mm").format("X");
+    return { trainName, destination, frequency, firstTime };
+};
+
+function cleanInputFields() {
+    $("#trainNameInput").val("");
+    $("#destinationInput").val("");
+    $("#frequencyInput").val("");
+    $("#firstTimeInput").val("");
+};
+
+
