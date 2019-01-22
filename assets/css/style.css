@@ -1,0 +1,23 @@
+.jumbotron {
+    background-color: #3A318E;
+}
+
+.jumbotron h1 {
+    color:white;
+}
+
+p, h1, h3 {
+    font-family: 'Roboto Slab', serif;
+}
+
+.panel-default>.panel-heading{
+    background-color: #337ab7;
+}
+
+.panel-title{
+    color: #fff;
+}
+
+.table-hover > tbody > tr:hover {
+    background-color: #daa1ac;
+}
