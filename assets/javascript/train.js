@@ -95,7 +95,7 @@ $(document).ready(function(){
         // Next Train
         var nextTrain = moment().add(tMinutesTillTrain, "minutes").format("hh:mm");
         console.log("ARRIVAL TIME: " + nextTrain);
-
+// could not get the template to work as before
         var $newRow = $("<tr>")
             .attr("id", dateAdded)
             .append("<td>" + trainName + "</td><td>" + destination + "</td><td>" + frequency + "</td><td>" + nextTrain + "</td><td>" + tMinutesTillTrain +  "</td><td><input id='Button' type='button' value='Delete' class='deleteButton' data-key=" + dateAdded + "/></td></tr>")
@@ -109,13 +109,15 @@ $(document).ready(function(){
     // deleteTrain function will delete the train clicked on from
     // the database.
     function deleteTrain(dateAddedValue){
+        // tried to get a query to get the child records to delete
         // Find all train-schedule whose height is exactly 25 meters.
-var ref = firebase.database().ref("train-schedule-8bf86");
-ref.orderByChild("dateAdded").equalTo(dateAddedValue).on("child_added", function(snapshot) {
-  console.log(snapshot.key);
-        database.ref().child(dateAdded).remove();
-        console.log('trainremoved ' + dateAdded)
-    })
+//var ref = firebase.database().ref(child);
+//ref.orderByChild("dateAdded").equalTo(dateAddedValue).on("child_added", function(snapshot) {
+  //console.log(snapshot.key);
+  // delete from database not working?????
+        database.ref().child('dateAdded').remove(dateAddedValue);
+        console.log('trainremoved ' + dateAddedValue);
+   // })
 };
 
 
@@ -123,13 +125,12 @@ ref.orderByChild("dateAdded").equalTo(dateAddedValue).on("child_added", function
     $(document).on("click", '.deleteButton', function(event){
         console.log('at delete')
         console.log($(this).attr('data-key'));
-});
-
         // remove this table row
         $(this).closest('tr').remove();
         // go delete from database
         var dateAddedValue = $(this).attr('data-key')
         deleteTrain(dateAddedValue);
+    });
 
 
 }); // end doument ready
