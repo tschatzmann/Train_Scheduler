@@ -1,8 +1,5 @@
 $(document).ready(function(){
-
-    // Initialize Firebase
  
-
   // Initialize Firebase
   var config = {
     apiKey: "AIzaSyBXczEwVBR-vQAGD8uF-yEjXRDqj6_rasI",
@@ -82,7 +79,6 @@ $(document).ready(function(){
 
         // Difference between the times
         var diffTime = moment(currentTimeConverted, "X").diff(moment(firstTimeConverted, "X"), "minutes");
-        console.log("DIFFERENCE IN TIME: " + diffTime);
 
         // Time apart (remainder)
         var tRemainder = diffTime % frequency;
@@ -90,21 +86,23 @@ $(document).ready(function(){
 
         // Minute Until Train
         var tMinutesTillTrain = frequency - tRemainder;
-        console.log("MINUTES TILL TRAIN: " + tMinutesTillTrain);
+        console.log("tMinutesTillTrain: " + tMinutesTillTrain);
 
         // Next Train
         var nextTrain = moment().add(tMinutesTillTrain, "minutes").format("hh:mm");
-        console.log("ARRIVAL TIME: " + nextTrain);
-// could not get the template to work as before
-        var $newRow = $("<tr>")
-            .attr("id", dateAdded)
-            .append("<td>" + trainName + "</td><td>" + destination + "</td><td>" + frequency + "</td><td>" + nextTrain + "</td><td>" + tMinutesTillTrain +  "</td><td><input id='Button' type='button' value='Delete' class='deleteButton' data-key=" + dateAdded + "/></td></tr>")
-            .appendTo($("#trainTbl > tbody"));
+        console.log("nextTrain: " + nextTrain);
+// template is now working
+        var $newRow = `<tr id =${dateAdded}>
+        <td> ${trainName}</td><td>${destination}</td><td>${frequency}</td><td>${nextTrain}</td><td>${tMinutesTillTrain}</td>
+        <td><input id='Button' type='button' value='Delete' class='deleteButton' data-key="${dateAdded}"/></td>
+    </tr>`
+        $("#trainbody").append($newRow)
 
         // If any errors are experienced, log them to console.
     }, function(errorObject) {
-        console.log("The read failed: " + errorObject.code);
+        console.log("The read failed: " + errorObject.code)  
     });
+
 
     // deleteTrain function will delete the train clicked on from
     // the database.
@@ -115,7 +113,7 @@ $(document).ready(function(){
 //ref.orderByChild("dateAdded").equalTo(dateAddedValue).on("child_added", function(snapshot) {
   //console.log(snapshot.key);
   // delete from database not working?????
-        database.ref().child('dateAdded').remove(dateAddedValue);
+       // database.ref().child('dateAdded').remove(dateAddedValue);
         console.log('trainremoved ' + dateAddedValue);
    // })
 };
@@ -125,11 +123,13 @@ $(document).ready(function(){
     $(document).on("click", '.deleteButton', function(event){
         console.log('at delete')
         console.log($(this).attr('data-key'));
+        var dateAddedValue = $(this).attr('data-key')
         // remove this table row
         $(this).closest('tr').remove();
         // go delete from database
-        var dateAddedValue = $(this).attr('data-key')
-        deleteTrain(dateAddedValue);
+        console.log('dateAddedValue ' + dateAddedValue)
+        //deleting from the database not working
+        //deleteTrain(dateAddedValue);
     });
 
 
